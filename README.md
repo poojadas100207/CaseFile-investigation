@@ -81,6 +81,7 @@ PORT=5000
 MONGODB_URI=your_mongodb_connection_string
 GEMINI_API_KEY=your_gemini_api_key
 CLIENT_URL=http://localhost:5173
+APP_TIMEZONE=Asia/Kolkata
 ```
 *(Note: If `MONGODB_URI` is left blank, the server automatically starts an in-memory MongoDB instance. If `GEMINI_API_KEY` is not provided, the server uses the built-in procedural engine for "The Tech Campus Heist" and other scenarios!)*
 
@@ -125,7 +126,7 @@ Open [http://localhost:5173](http://localhost:5173) in your browser!
 1. Push your repository to GitHub.
 2. In Vercel, import the repo and set **Root Directory** to `client`.
 3. Add environment variable:
-   - `VITE_API_URL` = `https://your-backend-domain.com/api`
+   - `VITE_API_URL` = `https://your-backend-domain.com/api` (see [`client/.env.example`](./client/.env.example))
 4. Deploy!
 
 ### Backend (Render / Railway / Fly.io)

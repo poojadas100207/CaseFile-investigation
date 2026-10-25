@@ -32,6 +32,7 @@ export default function InvestigationPage() {
   const [requestingHint, setRequestingHint] = useState(false);
   const [hintConfirmOpen, setHintConfirmOpen] = useState(false);
   const [clueNotification, setClueNotification] = useState(null);
+  const [evidenceFilter, setEvidenceFilter] = useState('all');
 
   useEffect(() => {
     const fetchCase = async () => {
@@ -53,6 +54,23 @@ export default function InvestigationPage() {
     };
     fetchCase();
   }, [id, navigate]);
+
+  useEffect(() => {
+    const handleShortcut = (event) => {
+      if (event.target instanceof HTMLInputElement || event.target instanceof HTMLTextAreaElement) {
+        return;
+      }
+
+      const tabs = ['dossier', 'suspects', 'evidence', 'hints'];
+      const tabIndex = Number(event.key) - 1;
+      if (tabIndex >= 0 && tabIndex < tabs.length) {
+        setActiveTab(tabs[tabIndex]);
+      }
+    };
+
+    window.addEventListener('keydown', handleShortcut);
+    return () => window.removeEventListener('keydown', handleShortcut);
+  }, []);
 
   const handleDiscoverClue = async (clueId) => {
     try {
@@ -353,17 +371,38 @@ export default function InvestigationPage() {
       {/* TAB 3: Evidence Board (Clues) */}
       {activeTab === 'evidence' && (
         <div className="space-y-4">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <p className="text-xs font-mono text-slate-400">
               Click "Examine Evidence" to analyze forensic traces and uncover details (+5 PTS each).
             </p>
-            <span className="text-xs font-mono text-cyan-400">
-              {discoveredCluesCount} of {totalClues} Analyzed
-            </span>
+            <div className="flex items-center gap-2">
+              {[
+                ['all', 'All'],
+                ['locked', 'Locked'],
+                ['discovered', 'Discovered'],
+              ].map(([value, label]) => (
+                <button
+                  key={value}
+                  onClick={() => setEvidenceFilter(value)}
+                  className={`px-2.5 py-1 rounded-lg border font-mono text-[10px] uppercase transition-colors ${
+                    evidenceFilter === value
+                      ? 'border-cyan-400 bg-cyan-500/15 text-cyan-300'
+                      : 'border-slate-800 text-slate-500 hover:text-slate-300'
+                  }`}
+                >
+                  {label}
+                </button>
+              ))}
+              <span className="text-xs font-mono text-cyan-400 whitespace-nowrap">
+                {discoveredCluesCount} of {totalClues}
+              </span>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {caseData.clues.map((clue, idx) => {
+            {caseData.clues
+              .filter((clue) => evidenceFilter === 'all' || (evidenceFilter === 'discovered' ? clue.discovered : !clue.discovered))
+              .map((clue, idx) => {
               const isDiscovered = clue.discovered;
               const isProcessing = discoveringClueId === clue.id;
 
@@ -425,8 +464,13 @@ export default function InvestigationPage() {
                   )}
                 </div>
               );
-            })}
+              })}
           </div>
+          {caseData.clues.filter((clue) => evidenceFilter === 'all' || (evidenceFilter === 'discovered' ? clue.discovered : !clue.discovered)).length === 0 && (
+            <div className="rounded-2xl border border-dashed border-slate-800 p-8 text-center text-xs font-mono text-slate-500">
+              No evidence matches this filter. Switch views to continue your investigation.
+            </div>
+          )}
         </div>
       )}
 

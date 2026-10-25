@@ -3,6 +3,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import { connectDB } from './config/db.js';
 import caseRoutes from './routes/caseRoutes.js';
+import { getServerTimestamp } from './utils/time.js';
 
 dotenv.config();
 
@@ -25,7 +26,7 @@ app.use('/api/cases', caseRoutes);
 app.get('/api/health', (req, res) => {
   res.json({
     status: 'online',
-    timestamp: new Date().toISOString(),
+    timestamp: getServerTimestamp(),
     service: 'AI Mystery Room Backend — The Tech Campus Heist',
   });
 });
