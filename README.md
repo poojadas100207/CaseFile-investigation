@@ -1,11 +1,5 @@
 # AI Mystery Room — The Tech Campus Heist 🔍💻
 
-> **Submission for AI Mystery Room Project**  
-> **Submission Deadline:** 2nd November, 11:59 PM  
-> **Project Submission Link:** [https://bit.ly/ai-mystery-room-sub-form](https://bit.ly/ai-mystery-room-sub-form)  
-> **Specification Document:** [`SPEC.md`](./SPEC.md)
-
----
 
 ## 🌟 1. Project Overview & Flagship Scenario
 
